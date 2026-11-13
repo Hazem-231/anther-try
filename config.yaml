@@ -1,0 +1,94 @@
+# QuantBot settings. Edit freely; restart the bot to apply.
+
+universe:
+  stocks: [SPY, QQQ, IWM, DIA, XLK, XLF, XLE, XLV, XLY, XLI,
+           AAPL, MSFT, NVDA, AMZN, GOOGL, META, TSLA, AMD, JPM, XOM]
+  crypto: [BTC/USD, ETH/USD, SOL/USD]
+
+benchmarks:
+  stocks: SPY
+  crypto: BTC/USD
+
+data:
+  source: auto          # auto = Alpaca when keys exist, otherwise Yahoo
+  lookback_days: 400    # history fetched every cycle
+  alpaca_feed: iex      # iex is free; sip needs a paid data plan
+
+strategy:
+  allow_short: true     # stocks only; Alpaca does not allow crypto shorts
+  regime_strength: 0.5  # how hard the market regime tilts conviction
+  cooldown_hours: 4     # no new entry in a symbol this soon after its stop was hit
+  # Prior signal weights (must sum to 1). Used until the first fit, and
+  # blended with the learned weights when fit.blend is below 1.
+  weights:
+    trend: 0.20
+    momentum: 0.20
+    mean_reversion: 0.10
+    breakout: 0.15
+    volume: 0.10
+    rel_strength: 0.10
+    setups: 0.15
+  fit:
+    enabled: true
+    blend: 1.0              # 0 = priors only, 1 = learned only
+    min_ic: 0.01            # correlations weaker than this count as zero
+    window_days: 270
+    horizon_days: 2
+    refit_days: 7           # live refit interval
+    require_edge: true      # no new entries when no signal clears min_ic
+  stocks:
+    entry_threshold: 0.30
+    exit_threshold: 0.10    # close when conviction flips this far the other way
+    atr_stop_mult: 2.5
+    target_r: 1.5
+    max_hold_days: 5
+  crypto:
+    entry_threshold: 0.40
+    exit_threshold: 0.10
+    atr_stop_mult: 3.0
+    target_r: 2.0
+    max_hold_days: 3
+
+timemachine:
+  replays: 10000
+  seed: 19
+  min_analogs: 40           # fewer than this -> falls back to all past bars
+  analog_strength: 0.7      # analog = past conviction >= this x entry threshold
+  min_edge_points: 5        # skip trades within 5 points of break-even
+  enabled: true
+
+risk:
+  risk_per_trade_pct: 0.5       # equity risked between entry and stop
+  max_position_pct: 10          # one position, % of equity
+  max_gross_exposure_pct: 100   # longs + shorts, % of equity (no leverage)
+  max_crypto_exposure_pct: 30
+  max_open_positions: 10
+  max_trades_per_day: 8
+  max_daily_loss_pct: 2.0       # kill switch: no new entries after this
+  min_reward_risk: 1.0
+  cash_buffer_pct: 5
+  min_order_usd: 25
+  min_short_equity_usd: 2000
+  stock_entry_window: ["09:45", "15:30"]   # New York time
+  max_data_age_minutes: 150
+
+costs:
+  stock_slippage_bps: 2
+  crypto_slippage_bps: 5
+  crypto_fee_bps: 25
+
+dry_run:
+  starting_cash: 100000
+
+schedule:
+  exit_check_minutes: 5
+
+server:
+  host: 127.0.0.1
+  port: 8765
+
+backtest:
+  days: 729
+  warmup_days: 180
+  refit_days: 60
+  replays: 1500

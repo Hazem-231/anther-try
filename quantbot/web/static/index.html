@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QuantBot</title>
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <h1>QuantBot</h1>
+    <span id="mode" class="badge">…</span>
+    <span id="market" class="pill"></span>
+  </div>
+  <div class="clock">
+    <div><span class="k">Last analysis</span> <span id="last-run">–</span></div>
+    <div><span class="k">Next</span> <span id="next-run">–</span></div>
+    <button id="run-now" type="button">Run analysis now</button>
+  </div>
+</header>
+
+<div id="alerts"></div>
+
+<main>
+  <section class="tiles" id="tiles" aria-label="Account"></section>
+
+  <section class="grid2">
+    <div class="card">
+      <h2>Account value</h2>
+      <p class="sub" id="equity-sub"></p>
+      <div id="equity-chart" class="chart"></div>
+    </div>
+    <div class="card">
+      <h2>Market backdrop</h2>
+      <p class="sub">Regime runs from −1 (hostile) to +1 (friendly) and tilts every trade's conviction.</p>
+      <div id="regime"></div>
+      <h3>Signal weights in use</h3>
+      <p class="sub">Refitted weekly on the last 270 days. A negative weight means the bot is fading that signal.</p>
+      <div id="weights" class="scroll"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="head">
+      <div>
+        <h2>This hour's decisions</h2>
+        <p class="sub" id="decisions-sub"></p>
+      </div>
+      <div class="filters" role="group" aria-label="Filter decisions">
+        <div class="seg" id="f-class">
+          <button data-v="all" class="on">All</button><button data-v="stocks">Stocks</button><button data-v="crypto">Crypto</button>
+        </div>
+        <div class="seg" id="f-show">
+          <button data-v="all" class="on">Everything</button><button data-v="active">Trades &amp; candidates</button>
+        </div>
+      </div>
+    </div>
+    <div class="scroll"><table id="decisions" class="tbl"></table></div>
+  </section>
+
+  <section class="grid2">
+    <div class="card">
+      <h2>What happens next</h2>
+      <div id="next"></div>
+    </div>
+    <div class="card">
+      <h2>Open positions</h2>
+      <div class="scroll"><table id="positions" class="tbl"></table></div>
+    </div>
+  </section>
+
+  <section class="grid2">
+    <div class="card">
+      <h2>Orders</h2>
+      <div class="scroll tall"><table id="orders" class="tbl"></table></div>
+    </div>
+    <div class="card">
+      <h2>Closed trades</h2>
+      <p class="sub" id="closed-sub"></p>
+      <div class="scroll tall"><table id="closed" class="tbl"></table></div>
+    </div>
+  </section>
+
+  <section class="card" id="backtest-card">
+    <h2>Backtest</h2>
+    <div id="backtest"></div>
+  </section>
+
+  <footer>
+    Runs on this computer only. Simulated odds and backtests describe the past; they are not predictions.
+    Not financial advice.
+  </footer>
+</main>
+
+<div id="tip" class="tip" hidden></div>
+<script src="/static/charts.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>
